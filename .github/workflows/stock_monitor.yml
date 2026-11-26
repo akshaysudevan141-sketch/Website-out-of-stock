@@ -2,7 +2,6 @@ name: Telegram Stock Watcher
 
 on:
   schedule:
-    # Runs every 10 minutes
     - cron: '*/10 * * * *'
   workflow_dispatch:
 
@@ -31,10 +30,7 @@ jobs:
         run: python check_stock.py
 
       - name: Save watchlist state
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add watchlist.json
-          git diff --staged --quiet || git commit -m "Update watchlist state"
-          git pull --rebase origin HEAD || true
-          git push
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update watchlist state automatically"
+          file_pattern: "watchlist.json"
